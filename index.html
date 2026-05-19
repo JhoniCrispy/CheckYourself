@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CheckYourself</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#0a0f1e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CheckYourself">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <link rel="icon" href="icons/icon.svg">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════ HOME -->
+  <div id="screen-home" class="screen active">
+    <div class="home-glow"></div>
+    <div class="home-content">
+
+      <div class="app-logo">
+        <div class="pulse-ring"></div>
+        <div class="pulse-ring d1"></div>
+        <div class="logo-circle">
+          <!-- Heart + cross icon -->
+          <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 29S5 21.5 5 13C5 9.1 8.1 6 12 6c2.5 0 4.7 1.3 6 3.2C19.3 7.3 21.5 6 24 6c3.9 0 7 3.1 7 7 0 8.5-14 16-14 16z" fill="white" opacity="0.92"/>
+            <rect x="15.5" y="12" width="3" height="10" rx="1.5" fill="#0ea5e9"/>
+            <rect x="12"   y="15.5" width="10" height="3" rx="1.5" fill="#0ea5e9"/>
+          </svg>
+        </div>
+      </div>
+
+      <h1 class="app-title">CheckYourself</h1>
+      <p class="app-subtitle">מעקב מדדים בריאותיים</p>
+
+      <div class="home-buttons">
+        <button class="btn-primary" onclick="showScreen('screen-entry')">
+          <span class="btn-icon">＋</span>
+          <span>הכנס מידע חדש</span>
+        </button>
+        <button class="btn-secondary" onclick="goToHistory()">
+          <span class="btn-icon">📋</span>
+          <span>עיון במידע שנשמר</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ ENTRY -->
+  <div id="screen-entry" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="showScreen('screen-home')" aria-label="חזור">→</button>
+      <h2>מדידה חדשה</h2>
+    </div>
+
+    <form id="entry-form" class="entry-form" onsubmit="handleSubmit(event)" novalidate>
+
+      <!-- Blood pressure -->
+      <div class="field-card">
+        <div class="field-label">
+          <span class="label-icon">🫀</span>
+          לחץ דם
+        </div>
+        <div class="bp-row">
+          <div class="bp-col">
+            <input class="field-input" type="number" name="bp_systolic"
+                   placeholder="120" min="60" max="260" inputmode="numeric">
+            <span class="bp-sub">סיסטולי (עליון)</span>
+          </div>
+          <span class="bp-slash">/</span>
+          <div class="bp-col">
+            <input class="field-input" type="number" name="bp_diastolic"
+                   placeholder="80" min="40" max="160" inputmode="numeric">
+            <span class="bp-sub">דיאסטולי (תחתון)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Temperature -->
+      <div class="field-card">
+        <div class="field-label">
+          <span class="label-icon">🌡️</span>
+          חום
+        </div>
+        <div class="input-unit">
+          <input class="field-input" type="number" name="temperature"
+                 placeholder="36.6" step="0.1" min="35" max="42" inputmode="decimal">
+          <span class="unit-badge">°C</span>
+        </div>
+      </div>
+
+      <!-- SpO2 -->
+      <div class="field-card">
+        <div class="field-label">
+          <span class="label-icon">🫁</span>
+          סטורציה
+        </div>
+        <div class="input-unit">
+          <input class="field-input" type="number" name="spo2"
+                 placeholder="98" min="70" max="100" inputmode="numeric">
+          <span class="unit-badge">%</span>
+        </div>
+      </div>
+
+      <!-- Pulse -->
+      <div class="field-card">
+        <div class="field-label">
+          <span class="label-icon">💓</span>
+          דופק
+        </div>
+        <div class="input-unit">
+          <input class="field-input" type="number" name="pulse"
+                 placeholder="72" min="30" max="220" inputmode="numeric">
+          <span class="unit-badge">bpm</span>
+        </div>
+      </div>
+
+      <!-- Medication -->
+      <div class="field-card med-card">
+        <label class="med-label" for="medication">
+          <span class="label-icon">💊</span>
+          <span class="med-text">לקחתי תרופות</span>
+          <input type="checkbox" name="medication" id="medication" class="toggle-input">
+          <div class="toggle-track" onclick="document.getElementById('medication').click()">
+            <div class="toggle-thumb"></div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Auto timestamp hint -->
+      <p class="ts-hint" id="ts-hint"></p>
+
+      <button type="submit" class="btn-save">שמור רשומה</button>
+
+    </form>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ HISTORY -->
+  <div id="screen-history" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="showScreen('screen-home')" aria-label="חזור">→</button>
+      <h2>מידע שנשמר</h2>
+      <button class="clear-btn" onclick="confirmClear()">מחק הכל</button>
+    </div>
+
+    <div class="history-body">
+
+      <div id="history-empty" class="history-empty" style="display:none">
+        <div class="empty-icon">📋</div>
+        <p>אין רשומות עדיין</p>
+        <p class="empty-sub">הוסיפי את המדידה הראשונה!</p>
+      </div>
+
+      <div id="table-scroll" class="table-scroll">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>תאריך</th>
+              <th>שעה</th>
+              <th>לחץ דם</th>
+              <th>חום</th>
+              <th>סטורציה</th>
+              <th>דופק</th>
+              <th>תרופות</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
