@@ -1,49 +1,79 @@
 # CheckYourself
 
-A simple health-vitals tracker for personal use. Runs entirely in the browser — no server, no login, no cost.
+A personal health-vitals tracker. Log blood pressure, temperature, SpO2, pulse, and medication — from any device, with data synced to the cloud per user.
+
+## Tech
+- **React + Vite** frontend
+- **Supabase** — PostgreSQL database + auth (email/password and magic link)
+
+---
+
+## Setup (one-time, ~10 minutes)
+
+### 1. Create a Supabase project
+1. Go to [supabase.com](https://supabase.com) → New project (free tier)
+2. Wait ~1 minute for it to spin up
+3. Go to **SQL Editor** → paste the contents of [`supabase/schema.sql`](supabase/schema.sql) → Run
+
+### 2. Get your API keys
+In Supabase: **Settings → API**
+- Copy **Project URL**
+- Copy **anon / public** key
+
+### 3. Configure the app
+```
+cp .env.example .env
+```
+Edit `.env`:
+```
+VITE_SUPABASE_URL=https://your-project-id.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+### 4. Run locally
+```
+npm install
+npm run dev
+```
+Open the printed URL in your browser or phone.
+
+---
+
+## Auth setup in Supabase (optional tweaks)
+In your Supabase dashboard → **Authentication → Settings**:
+- **Email confirmation**: disable it if you want users to log in immediately without confirming their email
+- **Magic link** is enabled by default
+- **Email + password** is enabled by default
+
+---
+
+## Deploy (share with your group)
+```
+npm run build
+```
+Drag the `dist/` folder to [Netlify Drop](https://app.netlify.com/drop) for instant free hosting.
+Then set env vars in **Netlify → Site Settings → Environment Variables**.
+
+Or push to GitHub and connect to Vercel/Netlify with auto-deploy.
+
+---
 
 ## Features
-
-- **New Entry** — record blood pressure, temperature, SpO2, pulse, and whether you took your medication
-- **View History** — scrollable table of all past readings, newest first, with automatic date/time stamp
-- **Works offline** — installable as a PWA (Add to Home Screen on iPhone or Android)
-- **Hebrew UI** — right-to-left layout
-
-## Tracked Vitals
-
-| Field | Hebrew | Example |
-|-------|--------|---------|
-| Blood Pressure | לחץ דם | 120/80 |
-| Temperature | חום | 36.6°C |
-| Oxygen Saturation | סטורציה | 98% |
-| Pulse | דופק | 72 bpm |
-| Medication taken | לקחתי תרופות | ✓ / ✗ |
-
-## How to Use
-
-### Option A — Open directly
-Download or clone the repo, then open `index.html` in your phone browser.
-
-### Option B — Host on GitHub Pages (recommended)
-1. Push this repo to GitHub
-2. Go to **Settings → Pages → Source → main branch**
-3. Share the generated URL with your users — they can bookmark it or add it to their home screen
-
-### Option C — Local network
-Run from any machine on your Wi-Fi:
-```
-npx serve .
-```
-Then open the printed URL on any phone on the same network.
-
-## Data & Privacy
-All data is stored locally in your browser (`localStorage`). Nothing is sent anywhere. Clearing your browser data will erase records — export to CSV (planned feature) if you want a backup.
+- Login with email + password, or magic link (no password)
+- New entry: blood pressure, temperature, SpO2, pulse, medication checkbox
+- Timestamp saved automatically from the device clock
+- History table — newest first, per-user data (Row Level Security)
 
 ## Project Structure
 ```
-index.html      main app shell
-style.css       styles
-app.js          all logic
-manifest.json   PWA config
-sw.js           service worker (offline support)
+src/
+├── App.jsx                 auth state + screen routing
+├── index.css               all styles
+├── lib/supabase.js         supabase client
+└── components/
+    ├── AuthScreen.jsx
+    ├── HomeScreen.jsx
+    ├── EntryScreen.jsx
+    └── HistoryScreen.jsx
+supabase/schema.sql         DB table + RLS policy
 ```

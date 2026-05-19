@@ -1,61 +1,73 @@
 # CheckYourself — Developer Notes
 
-## What this is
-A lightweight health-vitals tracking PWA for a small group of personal users.
-No backend. No accounts. Data lives in the browser's `localStorage` per device.
-
-## Tech Stack
-- **Plain HTML + CSS + JavaScript** — no framework, no build step
-- **localStorage** for persistence
-- **PWA** — `manifest.json` + service worker so it installs to the phone home screen
+## Stack
+- **Vite + React 18** (plain JS, no TypeScript)
+- **Supabase** — PostgreSQL database + Auth (email/password and magic link)
+- **Pure CSS** — custom design system in `src/index.css`, dark "Midnight Clinic" theme
+- **Hebrew RTL** — `lang="he" dir="rtl"` on `<html>`, Heebo font
 
 ## File Structure
 ```
 /
-├── index.html          # shell + router (shows/hides screens)
-├── style.css           # all styles
-├── app.js              # all logic (data layer + screen controllers)
-├── manifest.json       # PWA manifest
-├── sw.js               # service worker (offline cache)
-└── icons/              # app icons (192x192, 512x512)
+├── index.html              Vite entry (root-level)
+├── vite.config.js
+├── package.json
+├── .env                    VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY (not committed)
+├── .env.example            Template for env vars
+├── supabase/
+│   └── schema.sql          Run once in Supabase SQL editor to create the table
+├── public/
+│   ├── manifest.json       PWA manifest
+│   └── icons/icon.svg      App icon
+└── src/
+    ├── main.jsx            React root
+    ├── App.jsx             Auth state + screen router
+    ├── index.css           All styles
+    ├── lib/
+    │   └── supabase.js     Supabase client (reads from import.meta.env)
+    └── components/
+        ├── AuthScreen.jsx  Login — email+password and magic link
+        ├── HomeScreen.jsx  Two main buttons + sign out
+        ├── EntryScreen.jsx Vitals form → inserts to Supabase
+        └── HistoryScreen.jsx Table of readings from Supabase
 ```
 
-## Screens
-| ID | Purpose |
-|----|---------|
-| `#home` | Two buttons: "New Entry" and "View History" |
-| `#entry` | Form: blood pressure, temperature, saturation, pulse, medication checkbox. Save button writes to localStorage with `Date.now()` timestamp. |
-| `#history` | Table of all saved records, newest first. Columns: Date, Time, BP, Temp, SpO2, Pulse, Meds. |
+## Data Model (Supabase)
+Table: `readings`
+| Column       | Type    | Notes                        |
+|--------------|---------|------------------------------|
+| id           | uuid    | PK, auto-generated           |
+| user_id      | uuid    | FK → auth.users, NOT NULL    |
+| created_at   | timestamptz | auto, set on insert      |
+| bp_systolic  | int     | nullable                     |
+| bp_diastolic | int     | nullable                     |
+| temperature  | numeric(4,1) | nullable               |
+| spo2         | int     | nullable                     |
+| pulse        | int     | nullable                     |
+| medication   | boolean | default false                |
 
-## Data Model
-Records are stored as a JSON array under the key `checkyourself_records`.
+Row Level Security is enabled — users only see/write their own rows.
 
-```json
-[
-  {
-    "id": 1716100000000,
-    "timestamp": "2026-05-19T10:30:00.000Z",
-    "bp_systolic": 120,
-    "bp_diastolic": 80,
-    "temperature": 36.6,
-    "spo2": 98,
-    "pulse": 72,
-    "medication": true
-  }
-]
+## Auth
+- Email + password (sign in / sign up modes)
+- Magic link (OTP via email)
+- Both handled by Supabase Auth; session is persisted in localStorage by the SDK
+- `App.jsx` listens to `onAuthStateChange` to react to login/logout
+
+## Adding New Features
+- New screen: create `src/components/NewScreen.jsx`, add a state value in `App.jsx`, render it in the `{screen === 'new-screen' && ...}` block
+- New DB column: add it to `supabase/schema.sql` (for reference), run `ALTER TABLE readings ADD COLUMN ...` in Supabase SQL editor, add the field to `EntryScreen.jsx` form and `HistoryScreen.jsx` table
+
+## Local Dev
+```
+npm install
+cp .env.example .env   # fill in your Supabase URL and anon key
+npm run dev
 ```
 
-## Key Decisions
-- **No backend** — keeps setup to zero and cost to zero; each user's data stays on their own device.
-- **No framework** — zero build tooling; open `index.html` in a browser and it works.
-- **PWA** — users can "Add to Home Screen" so it looks and feels like a native app.
-- **Hebrew-friendly** — UI labels in Hebrew, `dir="rtl"` on the page, `lang="he"`.
-
-## Running Locally
-Open `index.html` directly in a browser, or serve with any static server:
+## Deploy
+Build and host the `dist/` folder on any static host (Netlify, Vercel, GitHub Pages).
 ```
-npx serve .
+npm run build
 ```
-
-## Deployment
-Push to GitHub and enable GitHub Pages on the `main` branch — free, instant, no config.
+Set the same env vars (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) in the host's dashboard.
