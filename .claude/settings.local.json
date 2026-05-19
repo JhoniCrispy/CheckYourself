@@ -2,7 +2,25 @@
   "permissions": {
     "allow": [
       "Skill(frontend-design)",
-      "Skill(frontend-design:*)"
+      "Skill(frontend-design:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Skill(trycycle)",
+      "Skill(trycycle:*)",
+      "Bash(python3 \"C:\\\\Users\\\\user\\\\.claude\\\\skills\\\\trycycle\\\\check-update.py\")",
+      "Bash(python \"C:\\\\Users\\\\user\\\\.claude\\\\skills\\\\trycycle\\\\check-update.py\")",
+      "Bash(py \"C:\\\\Users\\\\user\\\\.claude\\\\skills\\\\trycycle\\\\check-update.py\")",
+      "Bash(py:*)",
+      "Bash(PYTHONUTF8=1 py \"C:\\\\Users\\\\user\\\\.claude\\\\skills\\\\trycycle\\\\orchestrator\\\\run_phase.py\" prepare --phase test-strategy --template \"C:\\\\Users\\\\user\\\\.claude\\\\skills\\\\trycycle\\\\subagents\\\\prompt-test-strategy.md\" --workdir \"C:\\\\Projects\\\\CheckYourself\" --transcript-cli claude-code --canary \"trycycle-canary-14228688695313917483\" --transcript-placeholder INITIAL_REQUEST_AND_SUBSEQUENT_CONVERSATION --require-nonempty-tag context 2>&1)",
+      "Bash(PYTHONUTF8=1 py \"C:\\\\Users\\\\user\\\\.claude\\\\skills\\\\trycycle\\\\orchestrator\\\\run_phase.py\" prepare --phase test-strategy --template \"C:\\\\Users\\\\user\\\\.claude\\\\skills\\\\trycycle\\\\subagents\\\\prompt-test-strategy.md\" --workdir \"C:\\\\Projects\\\\CheckYourself\" --transcript-cli claude-code --canary \"trycycle-canary-14228688695313917483\" --transcript-placeholder INITIAL_REQUEST_AND_SUBSEQUENT_CONVERSATION --require-nonempty-tag context)",
+      "Bash(PYTHONUTF8=1 py \"C:\\\\Users\\\\user\\\\.claude\\\\skills\\\\trycycle\\\\orchestrator\\\\run_phase.py\" prepare --phase test-strategy --template \"C:\\\\Users\\\\user\\\\.claude\\\\skills\\\\trycycle\\\\subagents\\\\prompt-test-strategy.md\" --workdir \"C:\\\\Projects\\\\CheckYourself\" --transcript-cli claude-code --canary \"trycycle-canary-14228688695313917483\" --transcript-placeholder INITIAL_REQUEST_AND_SUBSEQUENT_CONVERSATION --require-nonempty-tag context --ignore-tag-for-placeholders context 2>&1)",
+      "Bash(PYTHONUTF8=1 py \"C:\\\\Users\\\\user\\\\.claude\\\\skills\\\\trycycle\\\\orchestrator\\\\run_phase.py\" prepare --phase planning-initial --template \"C:\\\\Users\\\\user\\\\.claude\\\\skills\\\\trycycle\\\\subagents\\\\prompt-planning-initial.md\" --workdir \"C:\\\\Projects\\\\CheckYourself\\\\.worktrees\\\\feature-roadmap\" --set \"WORKTREE_PATH=C:\\\\Projects\\\\CheckYourself\\\\.worktrees\\\\feature-roadmap\" --transcript-cli claude-code --canary \"trycycle-canary-88519904174954197718\" --transcript-placeholder USER_REQUEST_TRANSCRIPT --require-nonempty-tag task_input_json --ignore-tag-for-placeholders task_input_json 2>&1)",
+      "Bash(ls \"C:\\\\Users\\\\user\\\\.claude\\\\projects\\\\c--Projects-CheckYourself\\\\\" | sort -k6 -r | head -5)",
+      "Read(//c/Users/user/.claude/projects/**)",
+      "PowerShell($content = Get-Content \"C:\\\\Users\\\\user\\\\.claude\\\\projects\\\\c--Projects-CheckYourself\\\\9f062909-a321-425e-bc97-8c31c2c3ddb1.jsonl\" -Raw -Encoding UTF8; if \\($content -match \"trycycle-canary-42900853526381515205\"\\) { \"CANARY FOUND\" } else { \"canary not found\" }; \"File size: $\\($content.Length\\) chars\")",
+      "PowerShell(Get-Command rg -ErrorAction SilentlyContinue)",
+      "PowerShell(py -c \"import shutil; print\\('rg found:', shutil.which\\('rg'\\)\\)\")",
+      "Bash(npm install *)",
+      "Bash(npm run *)"
     ]
   }
 }

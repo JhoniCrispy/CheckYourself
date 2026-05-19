@@ -32,6 +32,19 @@ export default function HomeScreen({ setScreen, user, onSignOut }) {
             <span className="btn-icon">📋</span>
             <span>עיון במידע שנשמר</span>
           </button>
+          <button className="btn-secondary" onClick={() => setScreen('charts')}>
+            <span className="btn-icon">📈</span>
+            <span>גרפים</span>
+          </button>
+        </div>
+
+        <div className="home-manage-row">
+          <button className="btn-manage" onClick={() => setScreen('medications')}>
+            💊 ניהול תרופות
+          </button>
+          <button className="btn-manage" onClick={() => setScreen('metric-types')}>
+            ⚙️ מדדים מותאמים
+          </button>
         </div>
 
         <p className="user-email">{user.email}</p>

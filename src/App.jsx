@@ -1,17 +1,20 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from './lib/supabase'
-import AuthScreen    from './components/AuthScreen'
-import HomeScreen    from './components/HomeScreen'
-import EntryScreen   from './components/EntryScreen'
-import HistoryScreen from './components/HistoryScreen'
+import AuthScreen        from './components/AuthScreen'
+import HomeScreen        from './components/HomeScreen'
+import EntryScreen       from './components/EntryScreen'
+import HistoryScreen     from './components/HistoryScreen'
+import ChartsScreen      from './components/ChartsScreen'
+import MedicationsScreen from './components/MedicationsScreen'
+import MetricTypesScreen from './components/MetricTypesScreen'
 
 export default function App() {
   const [user,        setUser]        = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
   const [screen,      setScreen]      = useState('home')
   const [toast,       setToast]       = useState(null)
+  const [toastType,   setToastType]   = useState('success')
 
-  // ── Auth listener ────────────────────────────────────────────────────────
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
@@ -25,19 +28,17 @@ export default function App() {
     return () => subscription.unsubscribe()
   }, [])
 
-  // ── Toast ────────────────────────────────────────────────────────────────
-  const showToast = useCallback((msg) => {
+  const showToast = useCallback((msg, type = 'success') => {
     setToast(msg)
+    setToastType(type)
     setTimeout(() => setToast(null), 2800)
   }, [])
 
-  // ── Sign out ─────────────────────────────────────────────────────────────
   const handleSignOut = async () => {
     await supabase.auth.signOut()
     setScreen('home')
   }
 
-  // ── Render ───────────────────────────────────────────────────────────────
   if (authLoading) {
     return (
       <div className="splash">
@@ -62,11 +63,16 @@ export default function App() {
 
   return (
     <>
-      {screen === 'home'    && <HomeScreen    {...screenProps} onSignOut={handleSignOut} />}
-      {screen === 'entry'   && <EntryScreen   {...screenProps} />}
-      {screen === 'history' && <HistoryScreen {...screenProps} />}
+      {screen === 'home'         && <HomeScreen        {...screenProps} onSignOut={handleSignOut} />}
+      {screen === 'entry'        && <EntryScreen       {...screenProps} />}
+      {screen === 'history'      && <HistoryScreen     {...screenProps} />}
+      {screen === 'charts'       && <ChartsScreen      {...screenProps} />}
+      {screen === 'medications'  && <MedicationsScreen {...screenProps} />}
+      {screen === 'metric-types' && <MetricTypesScreen {...screenProps} />}
 
-      {toast && <div className="toast show">{toast}</div>}
+      {toast && (
+        <div className={`toast show toast--${toastType}`}>{toast}</div>
+      )}
     </>
   )
 }
