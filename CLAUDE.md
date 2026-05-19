@@ -66,8 +66,8 @@ npm run dev
 ```
 
 ## Deploy
-Build and host the `dist/` folder on any static host (Netlify, Vercel, GitHub Pages).
-```
-npm run build
-```
-Set the same env vars (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) in the host's dashboard.
+Netlify is configured via [`netlify.toml`](netlify.toml) — build command and publish dir are set there.
+Push to GitHub, connect the repo on netlify.com, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as environment variables in the Netlify dashboard, then trigger a redeploy.
+Every subsequent `git push` auto-deploys.
+
+After the first deploy, update Supabase → **Authentication → URL Configuration** with the Netlify URL (required for magic link redirects).

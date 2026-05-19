@@ -48,13 +48,23 @@ In your Supabase dashboard → **Authentication → Settings**:
 ---
 
 ## Deploy (share with your group)
-```
-npm run build
-```
-Drag the `dist/` folder to [Netlify Drop](https://app.netlify.com/drop) for instant free hosting.
-Then set env vars in **Netlify → Site Settings → Environment Variables**.
 
-Or push to GitHub and connect to Vercel/Netlify with auto-deploy.
+### Netlify (recommended — auto-deploys on every push)
+1. Push this repo to GitHub
+2. Go to [netlify.com](https://netlify.com) → **Add new site → Import an existing project** → pick this repo
+3. Build settings are handled automatically by [`netlify.toml`](netlify.toml) — no manual config needed
+4. Add env vars in **Netlify → Site settings → Environment variables**:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+5. Trigger a redeploy — from here on, every `git push` auto-deploys
+
+### Supabase redirect URL (required for magic link)
+After deploying, go to Supabase → **Authentication → URL Configuration**:
+- **Site URL**: `https://your-site.netlify.app`
+- **Redirect URLs**: add `https://your-site.netlify.app`
+
+### Session persistence
+Users stay logged in automatically for ~7 days — Supabase stores the session in localStorage. No repeated logins needed.
 
 ---
 
